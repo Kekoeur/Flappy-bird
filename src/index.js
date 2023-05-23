@@ -26,7 +26,6 @@ function onpress(evt) {
   }
 
 }
-
 document.addEventListener('mousedown', onpress);
 document.body.onkeydown  = function(e) {
   if (e.key == " " ||

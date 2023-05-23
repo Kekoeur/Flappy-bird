@@ -235,7 +235,7 @@ export const pause = Sprite({
   filename: sheet,
   x: 199,
   y: 177,
-  width: 14,
+  width: 13,
   height: 14,
 })
 
@@ -243,7 +243,7 @@ export const play = Sprite({
   filename: sheet,
   x: 199,
   y: 191,
-  width: 14,
+  width: 13,
   height: 14,
 })
 

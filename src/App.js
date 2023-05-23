@@ -5,17 +5,24 @@ import {bg,fg, bird0, bird1, bird2, pipeN, pipeS, pause, play, gameover, _ok_, s
 import {width, height} from './common/common';
 import { observer} from 'mobx-react';
 import {rungame, states} from './store/store';
+import {ratio} from './common/common.js'
+
+const rx = ratio.ratio_w;
+const ry = ratio.ratio_h;
+const _scale_ = rx+" "+ry || 1;
 
 const SpriteWrapper = observer(class SpriteWrapper extends Component {
 
   render() {
     const gameSprite = this.props.gameSprite;
+    const scale = gameSprite.scale || 1;
     const rotate = 'rotate('+ gameSprite.rotation +'rad)'
     const translate = 'translate(' + gameSprite.cx + 'px,' + gameSprite.cy + 'px)'
     const ctrans = (gameSprite.rotation == null) ? translate : translate + ' ' + rotate;
     const onClickHandler = (this.props.onClickHandler) == null ? null : this.props.onClickHandler;
     var style = {
       transform: ctrans,
+      scale: scale,
       position: 'absolute'
     }
 
@@ -46,6 +53,7 @@ export const Bird = observer(
    class Bird extends Component {
 
       render() {
+        console.log(this.props.bird)
           let wbird;
           switch(this.props.bird.frame) {
             case 1:
@@ -89,7 +97,7 @@ const Gameover = observer(
   class Gameover extends Component {
 
   render() {
-      return <SpriteWrapper gameSprite={{cx: width/2 - 94, cy: height-400}}> {gameover} </SpriteWrapper>;
+      return <SpriteWrapper gameSprite={{cx: (width/2 - 94)/rx, cy: height/ry-400, scale: _scale_}}> {gameover} </SpriteWrapper>;
   }
 
 })
@@ -100,7 +108,7 @@ export const Pause = observer(
       props.onPausedChange(!props.paused)
     }
     let btn = props.paused ? play : pause    
-    return <SpriteWrapper gameSprite={{cx: width - 26, cy: 0}} onClickHandler={handleClick}> {btn} </SpriteWrapper>;
+    return <SpriteWrapper gameSprite={{cx: (width - 13 - 13*rx)/rx, cy: 7*ry - 7, scale: _scale_}} onClickHandler={handleClick}> {btn} </SpriteWrapper>;
 })
 
 export const OK = observer(
@@ -109,48 +117,48 @@ export const OK = observer(
       props.onPausedChange(!props.paused)
       rungame();
     }
-      return <SpriteWrapper gameSprite={{cx: width/2 - 40, cy: height-340}} onClickHandler={handleClick} > {_ok_} </SpriteWrapper>;
+      return <SpriteWrapper gameSprite={{cx: (width/2 - 40)/rx, cy: height/ry-340, scale: _scale_}} onClickHandler={handleClick} > {_ok_} </SpriteWrapper>;
 })
 
-export const Rate = observer(
+/*export const Rate = observer(
   class Rate extends Component {
     render() {
         return <SpriteWrapper gameSprite={{cx: width-80, cy: height-480}}> {_rate_} </SpriteWrapper>;
     }
-})
+})*/
 
-export const Scoreboard = observer(
-  class Scoreboard extends Component {
+/*export const Score = observer(
+  class Score extends Component {
     render() {
-        return <SpriteWrapper gameSprite={{cx: width-80, cy: height-480}}> {_score_} </SpriteWrapper>;
+        return <SpriteWrapper gameSprite={{cx: (width-80)/rx, cy: height/ry-480, scale: _scale_}}> {_score_} </SpriteWrapper>;
     }
-})
+})*/
 
 export const Menu = observer(
   function Menu(props) {
-    return <SpriteWrapper gameSprite={{cx: width/2 - 40 + props.x, cy: height-180}}> {_menu_} </SpriteWrapper>;
+    return <SpriteWrapper gameSprite={{cx: (width/2 - 40 + props.x*rx)/rx, cy: height/ry-180, scale: _scale_}}> {_menu_} </SpriteWrapper>;
 })
 
-export const Share = observer(
+/*export const Share = observer(
   class Share extends Component {
     render() {
         return <SpriteWrapper gameSprite={{cx: width-80, cy: height-480}}> {_share_} </SpriteWrapper>;
     }
-})
+})*/
 
 export const Start = observer(
   function Start(props) {
     const handleClick = () => {
       props.onPausedChange(!props.paused)
     }
-    return <SpriteWrapper gameSprite={{cx: width/2 - 40 + props.x, cy: height-180}} onClickHandler={handleClick}> {_start_} </SpriteWrapper>;
+    return <SpriteWrapper gameSprite={{cx: (width/2 - 40 + props.x*rx)/rx, cy: height/ry-180, scale: _scale_}} onClickHandler={handleClick}> {_start_} </SpriteWrapper>;
 })
 
 export const Splash = observer(
   class Splash extends Component {
 
   render() {
-      return <SpriteWrapper gameSprite={{cx: width/2 - 59, cy: height-300}}> {splash} </SpriteWrapper>;
+      return <SpriteWrapper gameSprite={{cx: (width/2 - 59)/rx, cy: height/ry-300, scale: _scale_}}> {splash} </SpriteWrapper>;
   }
 
 })
@@ -159,7 +167,7 @@ export const Ready = observer(
   class Ready extends Component {
 
   render() {
-      return <SpriteWrapper gameSprite={{cx: width/2 - 87, cy: height-380}}> {ready} </SpriteWrapper>;
+      return <SpriteWrapper gameSprite={{cx: (width/2 - 87)/rx, cy: height/ry-380, scale: _scale_}}> {ready} </SpriteWrapper>;
   }
 
 })
@@ -262,7 +270,7 @@ const ScoreBoard = ({ score }) => {
   const scoreString = score.toString();
 
   return (
-    <SpriteWrapper gameSprite={{cx: (width/2 - 7*scoreString.length), cy: height-450}}>
+    <SpriteWrapper gameSprite={{cx: (width/2 - 7*scoreString.length)/rx, cy: height/ry-450, scale: _scale_}}>
       <div className='score'>
         {scoreString.split('').map((digit, index) => (
           <div key={index}>{getDigitImage(digit)}</div>
