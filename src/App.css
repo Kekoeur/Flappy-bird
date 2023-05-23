@@ -28,10 +28,14 @@
 }
 
 #fakingcanvas {
-	
-	left: 40%;
   border: 1px solid #000;
   overflow: hidden;
   position: relative;
   background-color: #70C5CF;
+}
+
+@media screen and (min-width: 500px) {
+  #fakingcanvas {
+    left: 40%;
+  }
 }
