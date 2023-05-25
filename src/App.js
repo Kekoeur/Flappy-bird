@@ -320,7 +320,7 @@ const App = observer(
       };
 
     componentDidMount() {
-      this.req = window.requestAnimationFrame(requestAnimationFrame(() => this.appUpdateFrame));
+      this.req = window.requestAnimationFrame(this.appUpdateFrame);
     }
 
     componentDidUpdate(state) {
