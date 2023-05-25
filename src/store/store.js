@@ -58,7 +58,7 @@ const updateBird = function(bird) {
 
   } else {
 
-    bird.velocity += bird.gravity/ry;
+    bird.velocity += bird.gravity;
   	bird.cy += bird.velocity;
 
     if (bird.cy >= height - fg_h-10) {
@@ -69,7 +69,7 @@ const updateBird = function(bird) {
 
   		}
       // sets velocity to jump speed for correct rotation
-      bird.velocity = bird._jump/ry;
+      bird.velocity = bird._jump;
     }
 
     // when bird lack upward momentum increment the rotation
@@ -135,7 +135,7 @@ const updatePipe = function() {
       
     }*/
 
-    p.cx -= 2*rx;
+    p.cx -= 2;
 
     if (p.cx < -pipe_w * rx) {
       store.pipes.splice(0, 2);
@@ -280,5 +280,6 @@ export const updateFrame = action(function() {
   if (  game.currentstate  === states.Game) {
       updatePipe()
   }
+  requestAnimationFrame(() => updateBird(bird));
 
 })
