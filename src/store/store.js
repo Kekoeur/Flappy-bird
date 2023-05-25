@@ -59,7 +59,7 @@ const updateBird = function(bird) {
   } else {
 
     bird.velocity += bird.gravity;
-  	bird.cy += bird.velocity;
+  	bird.cy += bird.velocity*ry;
 
     if (bird.cy >= height - fg_h-10) {
       bird.cy = height - fg_h-10;
