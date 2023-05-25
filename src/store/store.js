@@ -69,7 +69,7 @@ const updateBird = function(bird) {
 
   		}
       // sets velocity to jump speed for correct rotation
-      bird.velocity = bird._jump;
+      bird.velocity = bird._jump/ry;
     }
 
     // when bird lack upward momentum increment the rotation
