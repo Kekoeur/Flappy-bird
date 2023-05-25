@@ -58,7 +58,7 @@ const updateBird = function(bird) {
 
   } else {
 
-    bird.velocity += bird.gravity;
+    bird.velocity += bird.gravity*ry;
   	bird.cy += bird.velocity;
 
     if (bird.cy >= height - fg_h-10) {
@@ -135,7 +135,7 @@ const updatePipe = function() {
       
     }*/
 
-    p.cx -= 2;
+    p.cx -= 2*rx;
 
     if (p.cx < -pipe_w * rx) {
       store.pipes.splice(0, 2);
