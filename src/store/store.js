@@ -275,11 +275,10 @@ export const updateFrame = action(function() {
   fg1.cx = store.fgpos;  //Fg is observing the cx position not fgpos
   fg2.cx = store.fgpos + fg_w;
 
-  updateBird(store.bird)
+  requestAnimationFrame(() => updateBird(store.bird));
 
   if (  game.currentstate  === states.Game) {
       updatePipe()
   }
-  requestAnimationFrame(() => updateBird(bird));
 
 })
