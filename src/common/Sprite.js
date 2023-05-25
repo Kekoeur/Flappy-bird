@@ -35,7 +35,7 @@ export const fg = Sprite({
   filename: sheet,
   x: 138,
   y: 0,
-  width: 111,
+  width: 112,
   height: 56
 })
 
@@ -43,7 +43,7 @@ export const bird0 = Sprite({
   filename: sheet,
   x : 156,
   y : 115,
-  width : 17,
+  width : 16,
   height : 12
 })
 
@@ -51,7 +51,7 @@ export const bird1 = Sprite({
   filename: sheet,
   x : 156,
   y : 128,
-  width : 17,
+  width : 16,
   height : 12
 })
 
@@ -59,7 +59,7 @@ export const bird2 = Sprite({
   filename: sheet,
   x : 156,
   y : 141,
-  width : 17,
+  width : 16,
   height : 12
 })
 
@@ -139,7 +139,7 @@ export const splash = Sprite({
   filename: sheet,
   x: 0,
   y: 114,
-  width: 58.5,
+  width: 59,
   height: 50
 })
 
@@ -255,3 +255,28 @@ export const bird_h = bird0.props['data-h'] //all the bird maintain same height
 export const bird_w = bird0.props['data-w'] //all the bird maintain same width
 export const pipe_h = pipeN.props['data-h'] //both pipe north and south are same height
 export const pipe_w = pipeN.props['data-w'] //both pipe north and south are same width
+
+/*export function setBg_h(h) {
+  bg_h = h;
+}
+export function setBg_w(w) {
+  bg_w = w;
+}
+export function setFg_h(h) {
+  fg_h = h;
+}
+export function setFg_w(w) {
+  fg_w = w;
+}
+export function setBird_h(h) {
+  bird_h = h;
+}
+export function setBird_w(w) {
+  bird_w = w;
+}
+export function setPipe_h(h) {
+  pipe_h = h;
+}
+export function setPipe_w(w) {
+  pipe_w = w;
+}*/

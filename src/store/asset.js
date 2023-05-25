@@ -1,4 +1,9 @@
 import { extendObservable} from 'mobx';
+import {ratio} from '../common/common.js'
+
+const rx = ratio.ratio_w;
+const ry = ratio.ratio_h;
+const _scale_ = rx+" "+ry || 1;
 
 export class baseObj {
 
@@ -9,7 +14,7 @@ export class baseObj {
           cx: cx,
           cy: cy,
       })
-
+      this.scale = _scale_;
       this.id = id
 
 

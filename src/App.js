@@ -53,7 +53,6 @@ export const Bird = observer(
    class Bird extends Component {
 
       render() {
-        console.log(this.props.bird)
           let wbird;
           switch(this.props.bird.frame) {
             case 1:
