@@ -334,9 +334,9 @@ const App = observer(
         this.setState({ paused: true });
       }
 
-      /*if (!this.state.paused && prevState.paused) {
+      if (!this.state.paused && prevState.paused) {
         this.req = window.requestAnimationFrame(this.appUpdateFrame);
-      }*/
+      }
     }
 
     /*appUpdateFrame = () => {
