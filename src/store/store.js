@@ -5,6 +5,8 @@ import { bg_h, bg_w, fg_h, fg_w, pipe_h, pipe_w, bird_h, bird_w} from '../common
 import {action, observable } from 'mobx';    // Import required classes from mobx library
 import {ratio} from '../common/common.js'
 
+var lastFrameTime;
+
 const rx = ratio.ratio_w;
 const ry = ratio.ratio_h;
 
@@ -59,7 +61,7 @@ const updateBird = function(bird) {
   } else {
 
     bird.velocity += bird.gravity;
-  	bird.cy += bird.velocity*ry;
+  	bird.cy += bird.velocity;
 
     if (bird.cy >= height - fg_h-10) {
       bird.cy = height - fg_h-10;
@@ -255,7 +257,6 @@ export const birdjump =  action(function(bird) {
 })
 
 export const rungame = action(function() {
-
     store.bird = new bird(guid(),60,0)    // new bird object
     store.fgpos = 0
     store.frames = 1
@@ -270,15 +271,20 @@ export const rungame = action(function() {
 //Call to update frame
 export const updateFrame = action(function() {
 
+  const currentTime = performance.now();
+  //console.log(currentTime);
+  const deltaTime = (currentTime - lastFrameTime) / 1000; // Convertir en secondes
+
   store.frames++;
-  store.fgpos = (store.fgpos - 2) % 14;    // Update fg position
+  store.fgpos = (store.fgpos - 2*deltaTime) % 14;    // Update fg position
   fg1.cx = store.fgpos;  //Fg is observing the cx position not fgpos
   fg2.cx = store.fgpos + fg_w;
 
-  requestAnimationFrame(() => updateBird(store.bird));
+  updateBird(store.bird)
 
   if (  game.currentstate  === states.Game) {
       updatePipe()
   }
-
+  lastFrameTime = currentTime;
+  //console.log(store.lastFrameTime) 
 })
