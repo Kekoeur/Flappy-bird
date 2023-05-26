@@ -322,20 +322,10 @@ const App = observer(
     componentDidMount() {
       this.req = window.requestAnimationFrame(this.appUpdateFrame);
     }
-/*
-    componentDidUpdate(state) {
-      if(state.game.currentstate === states.Score && !this.state.paused) {
-          this.setState({paused : true})
-      }
-    }
-*/
+    
     componentDidUpdate(prevProps, prevState) {
       if (prevProps.game.currentstate === states.Score && !this.state.paused) {
         this.setState({ paused: true });
-      }
-
-      if (!this.state.paused && prevState.paused) {
-        this.req = window.requestAnimationFrame(this.appUpdateFrame);
       }
     }
 
