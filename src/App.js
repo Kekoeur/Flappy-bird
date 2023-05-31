@@ -7,6 +7,8 @@ import { observer} from 'mobx-react';
 import {rungame, states} from './store/store';
 import {ratio} from './common/common.js'
 
+let lastActionTime = 0;
+
 const rx = ratio.ratio_w;
 const ry = ratio.ratio_h;
 const _scale_ = rx+" "+ry || 1;
@@ -171,99 +173,6 @@ export const Ready = observer(
 
 })
 
-/*export const Num0 = observer(
-  class Num0 extends Component {
-
-  render() {
-      return <SpriteWrapper gameSprite={{cx: width/2 - 5, cy: height-450}}> {num0} </SpriteWrapper>;
-  }
-
-})
-
-export const Num1 = observer(
-  class Num1 extends Component {
-
-  render() {
-      return <SpriteWrapper gameSprite={{cx: width/2 - 5, cy: height-450}}> {num1} </SpriteWrapper>;
-  }
-
-})
-
-export const Num2 = observer(
-  class Num2 extends Component {
-
-  render() {
-      return <SpriteWrapper gameSprite={{cx: width/2 - 5, cy: height-450}}> {num2} </SpriteWrapper>;
-  }
-
-})
-
-
-export const Num3 = observer(
-  class Num3 extends Component {
-
-  render() {
-      return <SpriteWrapper gameSprite={{cx: width/2 - 5, cy: height-450}}> {num3} </SpriteWrapper>;
-  }
-
-})
-
-export const Num4 = observer(
-  class Num4 extends Component {
-
-  render() {
-      return <SpriteWrapper gameSprite={{cx: width/2 - 5, cy: height-450}}> {num4} </SpriteWrapper>;
-  }
-
-})
-
-export const Num5 = observer(
-  class Num5 extends Component {
-
-  render() {
-      return <SpriteWrapper gameSprite={{cx: width/2 - 5, cy: height-450}}> {num5} </SpriteWrapper>;
-  }
-
-})
-
-
-export const Num6 = observer(
-  class Num6 extends Component {
-
-  render() {
-      return <SpriteWrapper gameSprite={{cx: width/2 - 5, cy: height-450}}> {num6} </SpriteWrapper>;
-  }
-
-})
-
-export const Num7 = observer(
-  class Num7 extends Component {
-
-  render() {
-      return <SpriteWrapper gameSprite={{cx: width/2 - 5, cy: height-450}}> {num7} </SpriteWrapper>;
-  }
-
-})
-
-export const Num8 = observer(
-  class Num8 extends Component {
-
-  render() {
-      return <SpriteWrapper gameSprite={{cx: width/2 - 5, cy: height-450}}> {num8} </SpriteWrapper>;
-  }
-
-})
-
-
-export const Num9 = observer(
-  class Num0 extends Component {
-
-  render() {
-      return <SpriteWrapper gameSprite={{cx: width/2 - 5, cy: height-450}}> {num9} </SpriteWrapper>;
-  }
-
-})*/
-
 const ScoreBoard = ({ score }) => {
   // Convertissez le score en une chaîne de caractères
   const scoreString = score.toString();
@@ -320,29 +229,28 @@ const App = observer(
       };
 
     componentDidMount() {
-      this.req = window.requestAnimationFrame(this.appUpdateFrame);
+      requestAnimationFrame(this.update);
     }
-    
+
+    update = (currentTime) => {
+      const elapsed = currentTime - lastActionTime;
+      const actionInterval = 1000 / this.props.store.desiredActionPerSecond; 
+      
+      if(elapsed >= actionInterval && !this.state.paused) {
+        this.props.updateFrame(); // Appeler la fonction updateFrame du store avec le temps écoulé
+      
+        lastActionTime = currentTime;
+      }
+
+      this.req = requestAnimationFrame(this.update); // Appeler update à chaque frame
+    };
+
     componentDidUpdate(prevProps, prevState) {
       if (prevProps.game.currentstate === states.Score && !this.state.paused) {
         this.setState({ paused: true });
       }
     }
 
-    /*appUpdateFrame = () => {
-      if(!this.state.paused) {
-        this.props.updateFrame();
-      }
-        this.req = window.requestAnimationFrame(this.appUpdateFrame);
-    };*/
-
-    appUpdateFrame = () => {
-      if(!this.state.paused) {
-        this.props.updateFrame();
-      }
-    
-      this.req = window.requestAnimationFrame(this.appUpdateFrame);
-    };
     
 
     render() {

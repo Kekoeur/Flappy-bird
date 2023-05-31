@@ -17,7 +17,6 @@ export class baseObj {
       this.scale = _scale_;
       this.id = id
 
-
   }
 
 }

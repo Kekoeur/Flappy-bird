@@ -3,9 +3,9 @@ import { height } from '../common/common';
 import { bg_h, bg_w, fg_h, fg_w, pipe_h, pipe_w, bird_h, bird_w} from '../common/Sprite'; //To get sprite properties
 //import { setBg_h, setBg_w, setBird_h, setBird_w, setFg_h, setFg_w, setPipe_h, setPipe_w } from '../common/Sprite';
 import {action, observable } from 'mobx';    // Import required classes from mobx library
-import {ratio} from '../common/common.js'
+import {ratio} from '../common/common.js';
 
-var lastFrameTime;
+var start, end;
 
 const rx = ratio.ratio_w;
 const ry = ratio.ratio_h;
@@ -14,9 +14,6 @@ const bg1 = new bg(guid(), 0, height/ry - bg_h)    // Initialize bg object at 0,
 const bg2 = new bg(guid(), bg_w, height/ry - bg_h)    // Initialize bg object at bg_w,0
 
 //Build the moving ground
-console.log(height)
-console.log(ry)
-console.log(fg_h)
 const fg1 = new fg(guid(), 0, height/ry - fg_h/ry )    // Initialize fg object at 0,0
 const fg2 = new fg(guid(), fg_w, height/ry - fg_h/ry )    // Initialize fg object at fg_w,0
 
@@ -37,6 +34,7 @@ export const store = {
   fgs: [ fg1, fg2 ],    // Initialize array of fg objects
   pipes: observable([]), //initialize with empty pipe
   score: 0,    // Initialize score
+  desiredActionPerSecond: 100, // Initialize number of action per second
 }
 
 function guid() {    // generate unique id
@@ -50,6 +48,7 @@ function guid() {    // generate unique id
 }
 
 const updateBird = function(bird) {
+
   bird.frame += store.frames % 10 === 0 ? 1 : 0;    // change bird frame
   bird.frame %= bird.animation.length; //at every 10th, frame change bird frame
 
@@ -63,9 +62,14 @@ const updateBird = function(bird) {
     bird.velocity += bird.gravity;
   	bird.cy += bird.velocity;
 
-    if (bird.cy >= height - fg_h-10) {
-      bird.cy = height - fg_h-10;
+    if (bird.cy >= (height - fg_h*ry)/ry-10) {
+      bird.cy = (height - fg_h*ry)/ry -10;
+      console.log(bird)
+      console.log(fg_h*ry)
+      console.log(ry)
+      console.log(rx)
       if (game.currentstate === states.Game) {
+            end = new Date();
 
             game.currentstate = states.Score;
 
@@ -116,26 +120,12 @@ const updatePipe = function() {
       // vector length
       var d1 = dx*dx + dy*dy;
       var r = (bird.radius*rx)*(bird.radius*rx);
-      /*console.log('pipe_h', pipe_h);
-      console.log('pipe_w',pipe_w)
-      console.log('bird_w',bird_w);
-      console.log('bird_h',bird_h)*/
 
       var check_collision = checkCollision(bird, p, bird_w, bird_h, pipe_w, pipe_h, rx, ry);
-      /*console.log(check_collision.bool)*/
-      console.log(check_collision.message)
       
     if(check_collision.bool) {
       game.currentstate = states.Score;
     }
-    /*if (r > d1) {
-      console.log("old",bird.radius,' new ',bird.radius*rx)
-      console.log(pipe_w,' ',pipe_h);
-      console.log(bird_w,' ',bird_h);
-      console.l
-      console.log(store)
-      
-    }*/
 
     p.cx -= 2;
 
@@ -145,59 +135,6 @@ const updatePipe = function() {
   });
 };
 
-/*function checkCollision(bird_cx, bird_cy, pipe_cx, pipe_cy, bird_w, bird_h, pipe_w, pipe_h) {
-  var pipe_cx = pipe.cx;
-  var pipe_cy = pipe.cy;
-  var bird_cx = bird.cx;
-  var bird_cy = bird.cy;
-  var horizontal_distance = Math.abs(bird_cx - (pipe_cx + pipe_w/2));
-  var vertical_distance = Math.abs(bird_cy - (pipe_cy + pipe_h/2));
-  return horizontal_distance <= (bird_w / 2 + pipe_w / 2) && vertical_distance  <= (bird_h / 2 + pipe_h / 2);
-}*/
-
-/*function checkCollision(bird, pipe, bird_w, bird_h, pipe_w, pipe_h, rx, ry) {
-  var pipe_cx = pipe.cx;
-  var pipe_cy = pipe.cy;
-  var bird_cx = bird.cx;
-  var bird_cy = bird.cy;
-  var radius = bird.radius;
-  /*bird_w *= rx;
-  bird_h *= ry;
-  pipe_w *= rx;
-  pipe_h *= ry;*/
-
-  /*//Find the horizontal and vertical distance between the circle's center and the rectangle's center
-  var horizontal_distance = Math.abs(bird_cx - (pipe_cx + pipe_w/2/rx));
-  var vertical_distance = Math.abs(bird_cy - (pipe_cy + pipe_h/2/ry));
-  
-  //if the distance is greater than half circle + half rectangle, then they are too far apart to be colliding
-  if(horizontal_distance > (pipe_w/2 + radius)) { return {bool:false, message: "no-error1"}}
-  if(vertical_distance > (pipe_h/2 + radius))  { return {bool:false, message: "no-error2"}}
-
-  //if the distance is less than half rectangle then they are definitely colliding
-  if(horizontal_distance <= (pipe_w/2/rx)) { return {bool:true, message: "error1"}}
-  if(vertical_distance <= (pipe_h/2/ry)) { return {bool:true, message: "error2"}}
-
-  //Test for collision at rect corner
-    //Think of a line from the rectangle center to any rect corner
-    //Now extend that line by the radius of the circle
-    //If the circle's center is on that line they are colliding at exactly that rectangle corner
-
-  //Using Pythagoras formula to compare the distance between circle and rectangle centers
-  var dx = horizontal_distance-pipe_w/2;
-  var dy = vertical_distance-pipe_w/2;
-
-  /*var d1 = dx*dx + dy*dy;
-  var r = radius*radius;
-  if(r > d1) {
-    return {bool:true, message: "collision"};
-  }
-  else {
-    return {bool:false, message: "no-collision"};
-  }*/
-  /*return ({bool:(dx*dx+dy*dy) <= (radius*radius), message:"error3"})
-
-}*/
 function checkCollision(bird, pipe, bird_w, bird_h, pipe_w, pipe_h, rx, ry) {
   var pipe_cx = pipe.cx * rx + (pipe_w*rx)/2;
   if(pipe_cy < height*ry/2)
@@ -239,7 +176,7 @@ function checkCollision(bird, pipe, bird_w, bird_h, pipe_w, pipe_h, rx, ry) {
   var nearestY = Math.max(pipeMinY, Math.min(bird_cy, pipeMaxY));
   var deltaX = bird_cx - nearestX;
   var deltaY = bird_cy - nearestY;
-  console.log(deltaX * deltaX + deltaY * deltaY+" , "+radius * radius * (rx * rx + ry * ry))
+  
   // Check if the squared distances are less than or equal to the squared radius
   return {
     bool:
@@ -253,10 +190,14 @@ function checkCollision(bird, pipe, bird_w, bird_h, pipe_w, pipe_h, rx, ry) {
 export const birdjump =  action(function(bird) {
 
     bird.velocity = -bird._jump;    // Bird jump action
+    console.log('bird.velocity jump ',bird.velocity);
 
 })
 
 export const rungame = action(function() {
+
+    start = new Date();
+
     store.bird = new bird(guid(),60,0)    // new bird object
     store.fgpos = 0
     store.frames = 1
@@ -271,12 +212,8 @@ export const rungame = action(function() {
 //Call to update frame
 export const updateFrame = action(function() {
 
-  const currentTime = performance.now();
-  //console.log(currentTime);
-  const deltaTime = (currentTime - lastFrameTime) / 1000; // Convertir en secondes
-
   store.frames++;
-  store.fgpos = (store.fgpos - 2*deltaTime) % 14;    // Update fg position
+  store.fgpos = (store.fgpos - 2) % 14;    // Update fg position
   fg1.cx = store.fgpos;  //Fg is observing the cx position not fgpos
   fg2.cx = store.fgpos + fg_w;
 
@@ -285,6 +222,4 @@ export const updateFrame = action(function() {
   if (  game.currentstate  === states.Game) {
       updatePipe()
   }
-  lastFrameTime = currentTime;
-  //console.log(store.lastFrameTime) 
 })
