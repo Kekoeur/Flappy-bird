@@ -118,7 +118,7 @@ export const OK = observer(
       props.onPausedChange(!props.paused)
       rungame();
     }
-      return <SpriteWrapper gameSprite={{cx: (width/2 - 40)/rx, cy: height/ry-340, scale: _scale_}} onClickHandler={handleClick} > {_ok_} </SpriteWrapper>;
+      return <SpriteWrapper gameSprite={{cx: (width/2 - 40)/rx, cy: height/ry-3, scale: _scale_}} onClickHandler={handleClick} > {_ok_} </SpriteWrapper>;
 })
 
 /*export const Rate = observer(
