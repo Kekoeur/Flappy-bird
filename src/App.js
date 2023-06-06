@@ -12,7 +12,6 @@ let lastActionTime = 0;
 const rx = ratio.ratio_w;
 const ry = ratio.ratio_h;
 const _scale_ = rx+" "+ry || 1;
-console.log('scale ',_scale_)
 
 const SpriteWrapper = observer(class SpriteWrapper extends Component {
 
@@ -47,7 +46,6 @@ const Bg = observer(
 const Fg = observer(
   class Fg extends Component {
   render() {
-    console.log(this.props.fg)
       return <SpriteWrapper gameSprite={this.props.fg}> {fg} </SpriteWrapper>;
   }
 
