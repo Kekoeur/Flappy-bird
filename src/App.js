@@ -12,6 +12,7 @@ let lastActionTime = 0;
 const rx = ratio.ratio_w;
 const ry = ratio.ratio_h;
 const _scale_ = rx+" "+ry || 1;
+console.log('scale ',_scale_)
 
 const SpriteWrapper = observer(class SpriteWrapper extends Component {
 
@@ -46,6 +47,7 @@ const Bg = observer(
 const Fg = observer(
   class Fg extends Component {
   render() {
+    console.log(this.props.fg)
       return <SpriteWrapper gameSprite={this.props.fg}> {fg} </SpriteWrapper>;
   }
 
@@ -118,7 +120,7 @@ export const OK = observer(
       props.onPausedChange(!props.paused)
       rungame();
     }
-      return <SpriteWrapper gameSprite={{cx: (width/2 - 40)/rx, cy: height/ry-3, scale: _scale_}} onClickHandler={handleClick} > {_ok_} </SpriteWrapper>;
+      return <SpriteWrapper gameSprite={{cx: (width/2 - 40)/rx, cy: height/ry-180, scale: _scale_}} onClickHandler={handleClick} > {_ok_} </SpriteWrapper>;
 })
 
 /*export const Rate = observer(
