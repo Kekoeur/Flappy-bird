@@ -9,6 +9,8 @@ var start, end;
 
 const rx = ratio.ratio_w;
 const ry = ratio.ratio_h;
+console.log(rx);
+console.log(ry)
 
 const bg1 = new bg(guid(), 0, height/ry - bg_h)    // Initialize bg object at 0,0
 const bg2 = new bg(guid(), bg_w, height/ry - bg_h)    // Initialize bg object at bg_w,0
@@ -105,25 +107,18 @@ const updatePipe = function() {
   }
   store.pipes.forEach((p) => {
     const bird = store.bird;
-    var cx = Math.min(Math.max(bird.cx, p.cx), p.cx + pipe_w * rx);
-    var cy = Math.min(Math.max(bird.cy + bird_h * ry / 2, p.cy), p.cy + pipe_h * ry);
+    //var cx = Math.min(Math.max(bird.cx, p.cx), p.cx + pipe_w * rx);
+    //var cy = Math.min(Math.max(bird.cy + bird_h * ry / 2, p.cy), p.cy + pipe_h * ry);
 
     if (bird.cx + bird_w * rx / 2 > p.cx && !p.scored) {
       p.scored = true;
       store.score += 0.5;
     }
 
-      // closest difference
-      var dx = bird.cx + (bird_w*rx)/2 - cx;
-      var dy = bird.cy + (bird_h*ry)/2 - cy;
-  
-      // vector length
-      var d1 = dx*dx + dy*dy;
-      var r = (bird.radius*rx)*(bird.radius*rx);
-
       var check_collision = checkCollision(bird, p, bird_w, bird_h, pipe_w, pipe_h, rx, ry);
-      
+      console.log(check_collision.message)
     if(check_collision.bool) {
+      console.log(check_collision.message)
       game.currentstate = states.Score;
     }
 
@@ -136,7 +131,7 @@ const updatePipe = function() {
 };
 
 function checkCollision(bird, pipe, bird_w, bird_h, pipe_w, pipe_h, rx, ry) {
-  var pipe_cx = pipe.cx * rx + (pipe_w*rx)/2;
+  var pipe_cx = pipe.cx * rx + (pipe_w*ry)/2;
   if(pipe_cy < height*ry/2)
     var pipe_cy = pipe.cy * ry + (pipe_h*ry)/2;
   else
@@ -152,14 +147,23 @@ function checkCollision(bird, pipe, bird_w, bird_h, pipe_w, pipe_h, rx, ry) {
   var halfPipeHeight = pipe_h*ry / 2;
 
   // Calculate the minimum and maximum x and y coordinates for the bird and pipe
-  var birdMinX = bird_cx - halfBirdWidth;
-  var birdMaxX = bird_cx + halfBirdWidth;
-  var birdMinY = bird_cy - halfBirdHeight;
-  var birdMaxY = bird_cy + halfBirdHeight;
+  var birdMinX = bird_cx - halfBirdWidth/2;
+  var birdMaxX = bird_cx + halfBirdWidth/2;
+  var birdMinY = bird_cy - halfBirdHeight/2;//Possibilité de supprimer les half pour plus de marge d'erreur
+  var birdMaxY = bird_cy + halfBirdHeight/2;
   var pipeMinX = pipe_cx - halfPipeWidth;
   var pipeMaxX = pipe_cx + halfPipeWidth;
   var pipeMinY = pipe_cy - halfPipeHeight;
   var pipeMaxY = pipe_cy + halfPipeHeight;
+ /* console.log(birdMinX);
+  console.log(birdMaxX);
+  console.log(birdMinY);
+  console.log(birdMaxY);
+  console.log(pipeMinX);
+  console.log(pipeMaxX);
+  console.log(pipeMinY);
+  console.log(pipeMaxY);*/
+
 
   // Check if the bounding boxes of the bird and pipe intersect
   if (
@@ -182,7 +186,7 @@ function checkCollision(bird, pipe, bird_w, bird_h, pipe_w, pipe_h, rx, ry) {
     bool:
       deltaX * deltaX + deltaY * deltaY <=
       (radius * radius * (rx * rx + ry * ry)),
-    message: "collision : "+deltaX * deltaX + deltaY * deltaY+" , "+radius * radius * (rx * rx + ry * ry),
+    message: "pipe : "+pipe_cx+" "+pipe_cy+" bird "+bird_cx+" "+bird_cy+" collision : "+deltaX * deltaX + deltaY * deltaY+" , "+radius * radius * (rx * rx + ry * ry)+" position : "+ birdMinX+" "+birdMaxX+" "+pipeMinX+" "+pipeMaxX+" "+ birdMinY+" "+birdMaxY+" "+pipeMinY+" "+pipeMaxY+" ",
   };
 }
 
