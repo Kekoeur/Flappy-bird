@@ -14,9 +14,10 @@ const bg1 = new bg(guid(), 0, height/ry - bg_h)    // Initialize bg object at 0,
 const bg2 = new bg(guid(), bg_w, height/ry - bg_h)    // Initialize bg object at bg_w,0
 
 //Build the moving ground
-const fg1 = new fg(guid(), 0, height/ry - fg_h/ry )    // Initialize fg object at 0,0
-const fg2 = new fg(guid(), fg_w, height/ry - fg_h/ry )    // Initialize fg object at fg_w,0
-
+const fg1 = new fg(guid(), 0, height/ry - fg_h)    // Initialize fg object at 0,0
+const fg2 = new fg(guid(), fg_w, height/ry - fg_h )    // Initialize fg object at fg_w,0
+console.log(fg1.cx,' ',fg1.cy);
+console.log(ry)
 export const states = {
    Splash: 0, Game: 1, Score: 2    // Define states of game
 }

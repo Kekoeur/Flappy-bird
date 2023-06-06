@@ -11,6 +11,6 @@ console.log(height);
 } else {*/
   var ratio_w = width/320;
   var ratio_h = height/480;
-/*}*/
+//}
 
 export var ratio = {ratio_h: ratio_h, ratio_w: ratio_w}
