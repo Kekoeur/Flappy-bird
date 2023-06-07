@@ -9,8 +9,6 @@ var start, end;
 
 const rx = ratio.ratio_w;
 const ry = ratio.ratio_h;
-console.log(rx);
-console.log(ry)
 
 const bg1 = new bg(guid(), 0, height/ry - bg_h)    // Initialize bg object at 0,0
 const bg2 = new bg(guid(), bg_w, height/ry - bg_h)    // Initialize bg object at bg_w,0
@@ -65,11 +63,21 @@ const updateBird = function(bird) {
   	bird.cy += bird.velocity;
 
     if (bird.cy >= (height/ry - 112 + 56/ry)) {
+ 
+      if (game.currentstate === states.Game) {
+            end = new Date();
+
+            game.currentstate = states.Score;
+
+  		}
+      // sets velocity to jump speed for correct rotation
+      bird.velocity = bird._jump;
+    }
+
+
+    if (bird.cy <= (-112)) {
       bird.cy = (height/ry - 112 + 56/ry);
-      console.log(bird)
-      console.log(fg_h*ry)
-      console.log(ry)
-      console.log(rx)
+ 
       if (game.currentstate === states.Game) {
             end = new Date();
 
@@ -110,15 +118,8 @@ const updatePipe = function() {
     //var cx = Math.min(Math.max(bird.cx, p.cx), p.cx + pipe_w * rx);
     //var cy = Math.min(Math.max(bird.cy + bird_h * ry / 2, p.cy), p.cy + pipe_h * ry);
 
-    if (bird.cx + bird_w * rx / 2 > p.cx && !p.scored) {
-      p.scored = true;
-      store.score += 0.5;
-    }
-
       var check_collision = checkCollision(bird, p, bird_w, bird_h, pipe_w, pipe_h, rx, ry);
-      console.log(check_collision.message)
     if(check_collision.bool) {
-      console.log(check_collision.message)
       game.currentstate = states.Score;
     }
 
@@ -126,6 +127,11 @@ const updatePipe = function() {
 
     if (p.cx < -pipe_w * rx) {
       store.pipes.splice(0, 2);
+    }
+
+    if (bird.cx > p.cx  && !p.scored) {
+      p.scored = true;
+      store.score += 0.5;
     }
   });
 };

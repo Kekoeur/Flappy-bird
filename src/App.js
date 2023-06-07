@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 //import logo from './logo.svg';
 import './App.css';
-import {bg,fg, bird0, bird1, bird2, pipeN, pipeS, pause, play, gameover, _ok_, splash, ready, _rate_, _score_, _menu_, _share_, _start_, num0, num1, num2, num3, num4, num5, num6, num7, num8, num9 } from './common/Sprite';
+import {bg,fg, bird0, bird1, bird2, pipeN, pipeS,
+   pause, play, gameover, _ok_, splash, ready, _rate_, _score_, _menu_, _share_, _start_, score_display,
+   num0, num1, num2, num3, num4, num5, num6, num7, num8, num9,
+   medal1, medal2, medal3, medal4 } from './common/Sprite';
 import {width, height} from './common/common';
 import { observer} from 'mobx-react';
 import {rungame, states} from './store/store';
@@ -12,6 +15,8 @@ let lastActionTime = 0;
 const rx = ratio.ratio_w;
 const ry = ratio.ratio_h;
 const _scale_ = rx+" "+ry || 1;
+
+const bestscore = 10000000;
 
 const SpriteWrapper = observer(class SpriteWrapper extends Component {
 
@@ -173,6 +178,34 @@ export const Ready = observer(
 
 })
 
+const ScoreDisplay = ({final_score}) => {
+  const f_score = final_score.toString();
+
+  return (
+    <SpriteWrapper gameSprite={{cx: (width/2 - 113)/rx, cy: height/ry - 325, scale: _scale_}}> {score_display} </SpriteWrapper>
+  );
+};
+
+const Medal = (final_score) => {
+  return (
+    <SpriteWrapper gameSprite={{cx: (width/2 - 22)/rx - 65, cy: height/ry - 260 -22*ry, scale: _scale_}}> {getMedalImage(final_score)} </SpriteWrapper>
+  )
+}
+
+const FinalScore = ({final_score, id, y}) => {
+  const f_score = final_score.toString();
+
+  return (
+    <SpriteWrapper gameSprite={{cx: (width/2 - 14*f_score.length)/rx + 85, cy: height/ry - 272 - 22*ry + y, scale: _scale_}}>
+      <div className="score" id={id}>
+        {f_score.split('').map((digit, index) => (
+          <div key={index}>{getDigitImage(digit)}</div>
+        ))}
+      </div>
+    </SpriteWrapper>
+  )
+}
+
 const ScoreBoard = ({ score }) => {
   // Convertissez le score en une chaîne de caractères
   const scoreString = score.toString();
@@ -187,6 +220,27 @@ const ScoreBoard = ({ score }) => {
     </SpriteWrapper>
   );
 };
+
+const getMedalImage = (score) => {
+  let medal = null;
+  score = score.final_score
+  if(score >= 100){
+    medal = medal4;
+  } else {
+    if(score >= 80){
+      medal = medal3;
+    } else {
+      if(score >= 50){
+        medal = medal2;
+      } else {
+        if(score >= 20){
+          medal = medal1;
+        }
+      }
+    }
+  }
+  return medal;
+}
 
 // Fonction utilitaire pour obtenir l'image correspondant au chiffre
 const getDigitImage = (digit) => {
@@ -273,6 +327,10 @@ const App = observer(
           <Bird bird={bird} />
           <ScoreBoard score={score} />
           {currentstate === states.Score ? <Gameover /> : null}
+          {currentstate === states.Score ? <ScoreDisplay final_score={score} /> : null}
+          {currentstate === states.Score ? <Medal final_score={score} /> : null}
+          {currentstate === states.Score ? <FinalScore final_score={score} id={"f_score"} y={0}/> : null}
+          {currentstate === states.Score ? <FinalScore final_score={bestscore} id={"f_score"} y={40}/> : null}
           {currentstate === states.Score ? <OK paused={this.state.paused} onPausedChange={this.handlePausedChange} /> : null}
           {currentstate === states.Game ? <Pause paused={this.state.paused} onPausedChange={this.handlePausedChange} /> : null}
           {(currentstate === states.Game) && this.state.paused ? <><Start x={50} paused={this.state.paused} onPausedChange={this.handlePausedChange}/><Menu x={-50} /></>   : null}

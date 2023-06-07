@@ -1,7 +1,5 @@
 export var width = window.innerWidth-2;
 export var height = window.innerHeight-2;
-console.log(width);
-console.log(height);
 
 /*if (width >= 500) { //if this desktop
   width  = 320;

@@ -39,6 +39,14 @@ export const fg = Sprite({
   height: 56
 })
 
+export const score_display = Sprite({
+  filename: sheet,
+  x: 138,
+  y: 56,
+  width: 113,
+  height: 57
+})
+
 export const bird0 = Sprite({
   filename: sheet,
   x : 156,
@@ -229,6 +237,35 @@ export const num9 = Sprite({
   y: 188,
   width: 7,
   height: 10,
+})
+
+export const medal4 = Sprite({
+  filename: sheet,
+  x: 174,
+  y: 114,
+  width: 22,
+  height: 22,
+})
+export const medal2 = Sprite({
+  filename: sheet,
+  x: 198,
+  y: 114,
+  width: 22,
+  height: 22,
+})
+export const medal1 = Sprite({
+  filename: sheet,
+  x: 198,
+  y: 137,
+  width: 22,
+  height: 22,
+})
+export const medal3 = Sprite({
+  filename: sheet,
+  x: 174,
+  y: 137,
+  width: 22,
+  height: 22,
 })
 
 export const pause = Sprite({
