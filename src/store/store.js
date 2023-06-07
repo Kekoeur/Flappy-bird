@@ -155,7 +155,7 @@ const updatePipe = function() {
       store.pipes.splice(0, 2);
     }
 
-    if (bird.cx - bird_w*rx / 2 > p.cx  && !p.scored) {
+    if (bird.cx - bird_w / 2 > p.cx  && !p.scored) {
       p.scored = true;
       store.score += 0.5;
     }
