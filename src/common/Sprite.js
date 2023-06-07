@@ -284,6 +284,14 @@ export const play = Sprite({
   height: 14,
 })
 
+export const new_ = Sprite({
+  filename: sheet,
+  x: 196,
+  y: 168,
+  width: 16,
+  height: 8,
+})
+
 export const bg_h = bg.props['data-h']
 export const bg_w = bg.props['data-w']
 export const fg_h = fg.props['data-h']

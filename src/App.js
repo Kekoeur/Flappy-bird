@@ -4,7 +4,7 @@ import './App.css';
 import {bg,fg, bird0, bird1, bird2, pipeN, pipeS,
    pause, play, gameover, _ok_, splash, ready, _rate_, _score_, _menu_, _share_, _start_, score_display,
    num0, num1, num2, num3, num4, num5, num6, num7, num8, num9,
-   medal1, medal2, medal3, medal4 } from './common/Sprite';
+   medal1, medal2, medal3, medal4, new_ } from './common/Sprite';
 import {width, height} from './common/common';
 import { observer} from 'mobx-react';
 import {rungame, states} from './store/store';
@@ -15,9 +15,6 @@ let lastActionTime = 0;
 const rx = ratio.ratio_w;
 const ry = ratio.ratio_h;
 const _scale_ = rx+" "+ry || 1;
-
-const bestscore = 10000000;
-
 const SpriteWrapper = observer(class SpriteWrapper extends Component {
 
   render() {
@@ -192,11 +189,17 @@ const Medal = (final_score) => {
   )
 }
 
+const New = () => {
+  return (
+    <SpriteWrapper gameSprite={{cx: (width/2)/rx + 23, cy: height/ry - 239 - 30*ry, scale: _scale_}}> {new_} </SpriteWrapper>
+  )
+}
+
 const FinalScore = ({final_score, id, y}) => {
   const f_score = final_score.toString();
 
   return (
-    <SpriteWrapper gameSprite={{cx: (width/2 - 14*f_score.length)/rx + 85, cy: height/ry - 272 - 22*ry + y, scale: _scale_}}>
+    <SpriteWrapper gameSprite={{cx: (width/2 - 14*f_score.length)/rx + 85, cy: height/ry - 265 - 27*ry + y, scale: _scale_}}>
       <div className="score" id={id}>
         {f_score.split('').map((digit, index) => (
           <div key={index}>{getDigitImage(digit)}</div>
@@ -308,8 +311,8 @@ const App = observer(
     
 
     render() {
-      const { bgs, fgs, bird, pipes, score } = this.props.store;
-      const { currentstate } = this.props.game;
+      const { bgs, fgs, bird, pipes, score, bestscore } = this.props.store;
+      const { currentstate, newbestscore } = this.props.game;
       
       const style = {
         width: width,
@@ -331,6 +334,7 @@ const App = observer(
           {currentstate === states.Score ? <Medal final_score={score} /> : null}
           {currentstate === states.Score ? <FinalScore final_score={score} id={"f_score"} y={0}/> : null}
           {currentstate === states.Score ? <FinalScore final_score={bestscore} id={"f_score"} y={40}/> : null}
+          {(currentstate === states.Score) && newbestscore ? <New /> : null}
           {currentstate === states.Score ? <OK paused={this.state.paused} onPausedChange={this.handlePausedChange} /> : null}
           {currentstate === states.Game ? <Pause paused={this.state.paused} onPausedChange={this.handlePausedChange} /> : null}
           {(currentstate === states.Game) && this.state.paused ? <><Start x={50} paused={this.state.paused} onPausedChange={this.handlePausedChange}/><Menu x={-50} /></>   : null}

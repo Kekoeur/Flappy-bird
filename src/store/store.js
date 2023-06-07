@@ -10,6 +10,13 @@ var start, end;
 const rx = ratio.ratio_w;
 const ry = ratio.ratio_h;
 
+const getBestScoreFromLocalStorage = () => {
+  const storedBestScore = localStorage.getItem('bestScore');
+  return storedBestScore ? parseInt(storedBestScore) : 0;
+};
+
+var bestscore = getBestScoreFromLocalStorage();
+
 const bg1 = new bg(guid(), 0, height/ry - bg_h)    // Initialize bg object at 0,0
 const bg2 = new bg(guid(), bg_w, height/ry - bg_h)    // Initialize bg object at bg_w,0
 
@@ -23,7 +30,9 @@ export const states = {
 
 //Game state
 export const game = observable({
-    currentstate:0,    // Initialize current state
+    currentstate:0, // Initialize current state
+    paused: 0, // Initialize paused
+    newbestscore: 0,   // Initialize new bestscore
 })
 
 export const store = {
@@ -33,7 +42,8 @@ export const store = {
   bgs: [ bg1, bg2 ],    // Initialize array of bg objects
   fgs: [ fg1, fg2 ],    // Initialize array of fg objects
   pipes: observable([]), //initialize with empty pipe
-  score: 0,    // Initialize score
+  score: 0, // Initialize score
+  bestscore: bestscore,    // Initialize bestscore
   desiredActionPerSecond: 100, // Initialize number of action per second
 }
 
@@ -68,6 +78,7 @@ const updateBird = function(bird) {
             end = new Date();
 
             game.currentstate = states.Score;
+            updateBestScore();
 
   		}
       // sets velocity to jump speed for correct rotation
@@ -82,6 +93,7 @@ const updateBird = function(bird) {
             end = new Date();
 
             game.currentstate = states.Score;
+            updateBestScore();
 
   		}
       // sets velocity to jump speed for correct rotation
@@ -103,6 +115,14 @@ const updateBird = function(bird) {
   }
 }
 
+const updateBestScore = function() {
+  if (store.score > store.bestscore) {
+    localStorage.setItem('bestScore', store.score);
+    store.bestscore = store.score;
+    game.newbestscore = 1;
+  }
+}
+
 const updatePipe = function() {
 
   if (store.frames % 100 === 0) {
@@ -121,6 +141,12 @@ const updatePipe = function() {
       var check_collision = checkCollision(bird, p, bird_w, bird_h, pipe_w, pipe_h, rx, ry);
     if(check_collision.bool) {
       game.currentstate = states.Score;
+      /*if (store.score > store.bestscore) {
+        localStorage.setItem('bestScore', store.score);
+        store.bestscore = store.score;
+        game.newbestscore = 1;
+      }*/
+      updateBestScore();
     }
 
     p.cx -= 2;
@@ -129,7 +155,7 @@ const updatePipe = function() {
       store.pipes.splice(0, 2);
     }
 
-    if (bird.cx > p.cx  && !p.scored) {
+    if (bird.cx - bird_w*rx / 2 > p.cx  && !p.scored) {
       p.scored = true;
       store.score += 0.5;
     }
@@ -198,10 +224,7 @@ function checkCollision(bird, pipe, bird_w, bird_h, pipe_w, pipe_h, rx, ry) {
 
 
 export const birdjump =  action(function(bird) {
-
     bird.velocity = -bird._jump;    // Bird jump action
-    console.log('bird.velocity jump ',bird.velocity);
-
 })
 
 export const rungame = action(function() {
@@ -215,6 +238,7 @@ export const rungame = action(function() {
     store.pipes = observable([])  //Initalize to empty empty on game start
 
     game.currentstate= states.Game    // set game state to game
+    game.newbestscore = 0
 
 
 })
